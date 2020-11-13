@@ -5,13 +5,6 @@
 #include <sys/types.h>
 #include <unistd.h>
 #include <stdbool.h>
-#include <fcntl.h>
-
-
-
-
-
-
 #define MAX_WORDS 100
 /*const char *mypath[] = {
   "./",
@@ -37,7 +30,7 @@ void yellow() {
 void reset() {
   printf("\033[0m");
 }
-int getsize(char array[]);
+
 char error_message[30] = "An error has occurred\n";
 ssize_t getline(char **lineptr, size_t *n, FILE *stream);
 
@@ -146,41 +139,19 @@ int main(int argc, char *argv[]){
 
 
 
-                int stdoutFD = dup(1);   
-        
+
+
+
                 if (pid == 0)
                 {
-                    int path_size;
-                    char *cmd;
+
                     int i;
-                    int access_ret = -1;
-
                     for(i=0; path[i] != NULL; i++) {
-                        path_size= getsize(path[i]);
-				        cmd = calloc (path_size + getsize(tokens.tokens[0]) + 1, sizeof(char));
-                        memcpy(cmd, path[i], path_size);
-                        //se concatena el comando con la ruta path[i] asignada arriba a cmd
-                        strcat(cmd, tokens.tokens[0]);
-                        printf("La ruta es: %s \n", cmd);
+
+
                         if ((access_ret = access(cmd, X_OK)) == 0) {
-
-                            char outputFile[32];
-                            sscanf("kkk.txt", "%s", outputFile);
-
-                        
-                            int fd = creat(outputFile, 0644);   // create new file
-                            int newfd = dup2(fd, 1);            // redirects stdout to outputFile
-                            if( newfd == -1 ) {
-                               perror("dup2");  exit(1);
-                            }
-					        execv(cmd, tokens.tokens);
-                            printf("No entro");
+					        execv(cmd, args);
 					        exit(1);
-
-                            
-
-
-
 
                         }
 
@@ -195,7 +166,6 @@ int main(int argc, char *argv[]){
                 {  
                     wait(NULL);
                     printf("Finalizó\n");
-                    
                 }
 
         }
@@ -203,14 +173,4 @@ int main(int argc, char *argv[]){
 
 
         return 0;
-}
-
-
-int getsize(char *array) {
-	int i = 0;
-
-	while (array[i] != '\n' && array[i] != '\0')
-		i++;
-
-	return i;
 }
